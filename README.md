@@ -5,7 +5,7 @@ tmux plugin that shows GitHub Copilot billing usage (combined across VS Code Cop
 ## What it shows
 
 - Premium requests this month
-- Billable premium requests this month
+- Optional billable premium requests this month
 - Copilot spend in USD this month
 - Last refresh time
 - Optional top model breakdown
@@ -30,6 +30,7 @@ set -g @copilot_usage_scope 'auto'      # auto|user|org
 set -g @copilot_usage_org ''            # required when scope=org
 set -g @copilot_usage_refresh_seconds '90'
 set -g @copilot_usage_show_model 'off'  # on|off
+set -g @copilot_usage_show_billable 'off' # on|off
 set -g @copilot_usage_auto_append 'on'  # on|off
 set -g @copilot_usage_monthly_limit '500' # monthly request target
 set -g @copilot_usage_bar_width '10'
@@ -42,7 +43,11 @@ Then reload tmux and install plugins with TPM.
 
 The plugin renders:
 
-`Copilot: 182 req | billable 41 | $3.28 | 8% [#---------] | 14:37`
+`Copilot: 182 req | $3.28 | 8% [█░░░░░░░░░] | 14:37`
+
+If `@copilot_usage_show_billable` is `on`:
+
+`Copilot: 182 req | $3.28 | billable 41 | 8% [█░░░░░░░░░] | 14:37`
 
 Color thresholds for the percentage bar:
 

@@ -14,6 +14,7 @@ def parse_args():
         default=os.path.expanduser("~/.cache/copilot-usage/status.json"),
     )
     parser.add_argument("--show-model", action="store_true")
+    parser.add_argument("--show-billable", action="store_true")
     parser.add_argument("--monthly-limit", type=int, default=0)
     parser.add_argument("--bar-width", type=int, default=10)
     parser.add_argument(
@@ -53,14 +54,16 @@ def main():
     updated = short_time(str(data.get("updated_at", "")))
     error = data.get("error")
 
-    text = f"Copilot: {total} req | billable {billable} | ${spend:.2f}"
+    text = f"Copilot: {total} req | ${spend:.2f}"
+    if args.show_billable:
+        text += f" | billable {billable}"
 
     if args.monthly_limit > 0:
         usage_value = total if args.percent_metric == "total" else billable
         pct = min(999, int(round((usage_value / args.monthly_limit) * 100)))
         bar_width = max(5, args.bar_width)
         filled = min(bar_width, int(round((min(pct, 100) / 100) * bar_width)))
-        bar = ("#" * filled) + ("-" * (bar_width - filled))
+        bar = ("█" * filled) + ("░" * (bar_width - filled))
 
         if pct >= 90:
             color = "red"

@@ -4,17 +4,18 @@ set -euo pipefail
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-tmux set-option -gq @copilot_usage_scope "auto"
-tmux set-option -gq @copilot_usage_org ""
-tmux set-option -gq @copilot_usage_refresh_seconds "90"
-tmux set-option -gq @copilot_usage_cache_file "$HOME/.cache/copilot-usage/status.json"
-tmux set-option -gq @copilot_usage_python "python3"
-tmux set-option -gq @copilot_usage_token ""
-tmux set-option -gq @copilot_usage_show_model "off"
-tmux set-option -gq @copilot_usage_auto_append "on"
-tmux set-option -gq @copilot_usage_monthly_limit "0"
-tmux set-option -gq @copilot_usage_bar_width "10"
-tmux set-option -gq @copilot_usage_percent_metric "total"
+tmux set-option -goq @copilot_usage_scope "auto"
+tmux set-option -goq @copilot_usage_org ""
+tmux set-option -goq @copilot_usage_refresh_seconds "90"
+tmux set-option -goq @copilot_usage_cache_file "$HOME/.cache/copilot-usage/status.json"
+tmux set-option -goq @copilot_usage_python "python3"
+tmux set-option -goq @copilot_usage_token ""
+tmux set-option -goq @copilot_usage_show_model "off"
+tmux set-option -goq @copilot_usage_show_billable "off"
+tmux set-option -goq @copilot_usage_auto_append "on"
+tmux set-option -goq @copilot_usage_monthly_limit "0"
+tmux set-option -goq @copilot_usage_bar_width "10"
+tmux set-option -goq @copilot_usage_percent_metric "total"
 
 python_bin="$(tmux show-option -gv @copilot_usage_python)"
 scope="$(tmux show-option -gv @copilot_usage_scope)"
@@ -23,6 +24,7 @@ refresh="$(tmux show-option -gv @copilot_usage_refresh_seconds)"
 cache_file="$(tmux show-option -gv @copilot_usage_cache_file)"
 token="$(tmux show-option -gv @copilot_usage_token)"
 show_model="$(tmux show-option -gv @copilot_usage_show_model)"
+show_billable="$(tmux show-option -gv @copilot_usage_show_billable)"
 monthly_limit="$(tmux show-option -gv @copilot_usage_monthly_limit)"
 bar_width="$(tmux show-option -gv @copilot_usage_bar_width)"
 percent_metric="$(tmux show-option -gv @copilot_usage_percent_metric)"
@@ -30,6 +32,9 @@ percent_metric="$(tmux show-option -gv @copilot_usage_percent_metric)"
 render_cmd="$python_bin $PLUGIN_DIR/bin/render_status.py --cache-file $cache_file --monthly-limit $monthly_limit --bar-width $bar_width --percent-metric $percent_metric"
 if [[ "$show_model" == "on" ]]; then
   render_cmd="$render_cmd --show-model"
+fi
+if [[ "$show_billable" == "on" ]]; then
+  render_cmd="$render_cmd --show-billable"
 fi
 segment="#($render_cmd)"
 
