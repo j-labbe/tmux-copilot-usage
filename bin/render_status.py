@@ -60,7 +60,7 @@ def main():
         pct = min(999, int(round((usage_value / args.monthly_limit) * 100)))
         bar_width = max(5, args.bar_width)
         filled = min(bar_width, int(round((min(pct, 100) / 100) * bar_width)))
-        bar = ("#" * filled) + ("-" * (bar_width - filled))
+        bar = ("█" * filled) + ("░" * (bar_width - filled))
 
         if pct >= 90:
             color = "red"
